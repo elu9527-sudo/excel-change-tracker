@@ -5,6 +5,15 @@
   "main": "src/server.js",
   "type": "commonjs",
   "license": "MIT",
+  "author": "elu9527-sudo",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elu9527-sudo/excel-change-tracker.git"
+  },
+  "homepage": "https://github.com/elu9527-sudo/excel-change-tracker#readme",
+  "bugs": {
+    "url": "https://github.com/elu9527-sudo/excel-change-tracker/issues"
+  },
   "engines": {
     "node": ">=18"
   },
