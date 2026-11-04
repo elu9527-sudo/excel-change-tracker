@@ -1,0 +1,35 @@
+{
+  "name": "excel-change-tracker",
+  "version": "1.0.0",
+  "description": "本地运行、按行聚合的 Excel 新旧两版变更对比工具：哪条记录被删/被加、哪些字段的值变了，一眼看清",
+  "main": "src/server.js",
+  "type": "commonjs",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "excel",
+    "xlsx",
+    "diff",
+    "spreadsheet",
+    "change-tracking",
+    "data-quality",
+    "erp",
+    "node"
+  ],
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test test/",
+    "smoke": "node scripts/smoke.js",
+    "check": "node scripts/check-contracts.js",
+    "demo": "node scripts/make-demo-files.js",
+    "portable": "node scripts/make-portable.js"
+  },
+  "dependencies": {
+    "daff": "^1.4.2",
+    "express": "^4.21.2",
+    "multer": "^2.0.2",
+    "xlsx": "^0.18.5"
+  }
+}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ECT · Excel 字段级变更追踪</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">ECT</span>
+        <h1>Excel 变更对比</h1>
+      </div>
+      <span class="badge">本机单用户使用</span>
+    </div>
+    <p class="subtitle">上传新版 Excel，自动和上一版逐格对比：哪些行删了、哪些行加了、哪些字段改了值。</p>
+  </header>
+
+  <main class="page">
+    <div id="stale-banner" class="stale-banner hidden">
+      当前后台程序是旧版本（页面已更新、接口没更新）。请关掉所有黑色的命令行窗口，重新双击 <b>启动.bat</b>，然后刷新本页。
+    </div>
+    <section class="panel">
+      <h2 class="panel-title"><span class="step">1</span>上传新版 Excel</h2>
+      <p class="hint">只支持 <code>.xlsx</code>，单个文件不超过 20MB。文件名一样的会算同一份文件的不同版本，所以别改文件名。</p>
+      <div class="row">
+        <input type="file" id="file-input" accept=".xlsx" />
+        <button id="upload-btn" class="btn btn-primary">上传</button>
+      </div>
+      <p id="upload-status" class="status"></p>
+      <p id="upload-card" class="upload-card hidden"></p>
+    </section>
+
+    <section class="panel">
+      <h2 class="panel-title"><span class="step">2</span>看哪个文件</h2>
+      <div class="row">
+        <label for="line-select">文件（按文件名分组）：</label>
+        <select id="line-select"></select>
+        <button id="refresh-btn" class="btn btn-ghost">刷新</button>
+      </div>
+    </section>
+
+    <div class="layout">
+      <div class="left">
+        <section class="panel">
+          <h2 class="panel-title"><span class="step">3</span>上传记录（最新的在最上面）</h2>
+          <div id="timeline"><p class="hint">暂无数据。</p></div>
+        </section>
+
+        <section class="panel">
+          <h2 class="panel-title"><span class="step">4</span>改了什么</h2>
+          <p class="hint">按上传时间从新到旧列出所有变化。只想看某一次，用下面的日期筛选。</p>
+          <div class="filters">
+            <label>上传日期从<input type="date" id="f-date-from" /></label>
+            <label>到<input type="date" id="f-date-to" /></label>
+            <label>只看某个工作表<input type="text" id="f-sheet" placeholder="如 汇总数据" /></label>
+            <label>变化类型
+              <select id="f-type">
+                <option value="">全部</option>
+                <option value="added">新增</option>
+                <option value="modified">修改</option>
+                <option value="deleted">删除</option>
+              </select>
+            </label>
+            <button id="apply-btn" class="btn btn-primary">查询</button>
+            <button id="reset-btn" class="btn btn-ghost">清空条件</button>
+            <span id="hit-count" class="status"></span>
+          </div>
+
+          <details class="ignore-box">
+            <summary>忽略规则<span id="ignore-summary" class="ignore-summary"></span></summary>
+            <p class="hint">
+              一行一条，格式 <code>工作表:行:列:单元格</code>，某段留空表示"这段不限制"。
+              例：<code>Sheet1::A</code> 该表 A 列不看；<code>Sheet1:1-5::</code> 前 5 行不看；
+              <code>*:::A1</code> 所有表的 A1 不看；<code>Sheet2::X,Y</code> 两列不看。
+              被忽略的条目不删数据、不改历史，随时清空即恢复。
+            </p>
+            <textarea id="ignore-input" rows="4" spellcheck="false" placeholder="Sheet1::A&#10;*:1-3::"></textarea>
+            <div class="ignore-actions">
+              <button id="ignore-save" class="btn btn-primary">保存规则</button>
+              <button id="ignore-clear" class="btn btn-ghost">清空规则</button>
+              <label class="ignore-toggle"><input type="checkbox" id="ignore-off" /> 这次连带显示被忽略的条目</label>
+              <span id="ignore-status" class="status"></span>
+            </div>
+          </details>
+          <div class="table-wrap">
+            <table class="changes-table">
+              <thead>
+                <tr><th>变化</th><th>行号</th><th>是哪条记录</th><th>具体改了什么</th><th></th></tr>
+              </thead>
+              <tbody id="changes-body"></tbody>
+            </table>
+          </div>
+          <p id="changes-empty" class="hint hidden">没有符合条件的变化。</p>
+          <div id="pager" class="pager hidden">
+            <button id="prev-page" class="btn btn-ghost">上一页</button>
+            <span id="page-info" class="pager-info"></span>
+            <button id="next-page" class="btn btn-ghost">下一页</button>
+          </div>
+        </section>
+      </div>
+
+      <aside class="panel context">
+        <h2 class="panel-title">这条记录的前后对比</h2>
+        <div id="context-body">
+          <p class="hint"><span class="hint-text">点左边任意一行，这里会并排显示这条记录<b>改之前</b>和<b>改之后</b>分别是什么样，变了的字段会标黄。</span></p>
+        </div>
+      </aside>
+    </div>
+
+    <p class="notice">说明：在 Excel 里插入或删掉一行，会把下面的行整体往上/往下挪。所以有时"内容完全没变、只是位置变了"也会被列出来，这种条目请点开看一下右侧的前后对比再判断。工具只读取文件，不会改动你的 Excel。</p>
+    <p class="notice legend">
+      <span class="type-tag deleted">删除</span> 这一行/这个字段在新版里没有了　
+      <span class="type-tag added">新增</span> 新版里新出现的　
+      <span class="type-tag modified">修改</span> 同一行的值不一样了
+    </p>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

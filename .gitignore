@@ -1,0 +1,23 @@
+# 依赖与运行产物
+node_modules/
+dist/
+*.zip
+
+# 上传的 Excel、快照、变更记录、日志：属于使用者的真实数据，永远不入库
+data/
+logs/
+desktop/
+demo/
+
+# 任何 Excel 文件都不入库（演示文件用 `npm run demo` 现场生成）
+*.xlsx
+*.xls
+*.xlsm
+*.csv
+
+# 系统与编辑器
+.DS_Store
+Thumbs.db
+*.tmp
+.idea/
+.vscode/
