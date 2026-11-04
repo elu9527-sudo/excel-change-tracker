@@ -21,8 +21,13 @@
     "excel",
     "xlsx",
     "diff",
+    "excel-diff",
+    "excel-compare",
+    "xlsx-diff",
     "spreadsheet",
+    "spreadsheet-diff",
     "change-tracking",
+    "row-diff",
     "data-quality",
     "erp",
     "node"

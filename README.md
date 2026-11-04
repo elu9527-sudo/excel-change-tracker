@@ -1,9 +1,13 @@
 # Excel 变更对比（excel-change-tracker）
 
+[English](README.en.md) · 中文
+
 [![test](https://github.com/elu9527-sudo/excel-change-tracker/actions/workflows/test.yml/badge.svg)](https://github.com/elu9527-sudo/excel-change-tracker/actions/workflows/test.yml)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 上传同一份业务表的新旧两版，逐格对比，**按行告诉你哪条记录被删了、哪条是新加的、哪些字段的值变了**。
+
+> Compare two Excel workbooks and see, row by row, which records were deleted, added, or modified — see [English README](README.en.md).
 
 跑在本机、只开 `127.0.0.1`、数据不出机器，适合内部主数据导入前的复核：ERP/MES 导入模板改完一版，先看清楚动了什么，再导入。
 
