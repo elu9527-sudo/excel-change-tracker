@@ -43,7 +43,7 @@
 要求 Node.js **18+**（Windows / macOS / Linux 均可）。
 
 ```bash
-git clone https://github.com/<your-name>/excel-change-tracker.git
+git clone https://github.com/elu9527-sudo/excel-change-tracker.git
 cd excel-change-tracker
 npm install
 npm start            # 打开 http://127.0.0.1:3000
